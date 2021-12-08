@@ -7,20 +7,35 @@ Monte Carlo tree search (MCTS) is a heuristic search algorithm for some kinds of
 
 Source: [Wikipedia](https://en.wikipedia.org/wiki/Monte_Carlo_tree_search)
 
-This implementation uses UCT formula for searching the tree and balancing exploration and exploitation.
-
 ## The Frozen Lake
 
-The frozen lake is a 4×4 grid with four possible types of areas  — safe (S), frozen (F), hole (H) and goal (G). The objective is to get from S to G avoiding all holes. In this implementation the agent (Monte Carlo Tree Search) is able to move through holes, however it receives negative points for each hole on it's path and positive points for each safe area, extra points are given for reaching G. Agent is also punished for path that is longer than 7 steps, as this is the shortest way to get from S to G. Script generates random frozen lake each time it is launched.
+The frozen lake is a 4×4 grid with four possible types of areas  — safe (S), frozen (F), hole (H) and goal (G). The objective is to get from S to G avoiding all holes. In this implementation the agent (Monte Carlo Tree Search) is able to move through holes, however it receives negative points for each hole on it's path and positive points for each safe area, extra points are given for reaching G. Agent is also punished for path that is longer than 7 steps, as this is the shortest way to get from S to G.
 
 ## Requirements
 
-- Python 3.7
-- numpy 1.18.1
+- Python 3.6 or higher
 
-## To do
+## Quickstart
 
-- Some kind of cool tree visualization
-- Tuning of UCT paramaters
-- Other search methods than UCT
-- Alllowing to perform another search on the same tree to check performance improvement
+```python
+from game_object_creator import FrozenLakeCreator
+from reward_policy import FrozenLakeRewardPolicy
+from action_policy import FrozenLakeActionPolicy
+from search_policy import ucb_score
+from mcts import MonteCarloTreeSearch
+
+frozen_lake_creator = FrozenLakeCreator()
+frozen_lake = frozen_lake_creator.create_frozen_lake()
+reward_policy = FrozenLakeRewardPolicy(game_object=frozen_lake)
+action_policy = FrozenLakeActionPolicy()
+
+mcts = MonteCarloTreeSearch(
+    search_policy=ucb_score,
+    action_policy=action_policy,
+    reward_policy=reward_policy,
+    root_state=[0, 0]
+)
+
+mcts.find_solution()
+mcts.solution
+```
